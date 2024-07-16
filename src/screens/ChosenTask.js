@@ -31,7 +31,7 @@ export default function ChosenTask({navigation, GlobalState, handleSaveTask}){
             <TextInput
                     maxLength={23} 
                     style={styles.input}
-                    marginTop={10}
+                    marginTop={0}
                     onChangeText={setCategory}
                     value={category}
                     placeholder={chosenTask.category}
