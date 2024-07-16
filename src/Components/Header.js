@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text } from "react-native";
-import Constants from 'expo-constants';
+//import Constants from 'expo-constants';
 
 export default function Header(){
     return(
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        paddingTop: Constants.statusBarHeight,
+        //paddingTop: Constants.statusBarHeight,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

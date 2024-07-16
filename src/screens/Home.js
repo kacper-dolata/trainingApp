@@ -2,12 +2,36 @@ import React,{ useState, useEffect} from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import * as Clipboard from 'expo-clipboard';
+import { Picker } from '@react-native-picker/picker';
 
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 
 export default function Home({navigation, GlobalState}){
-    const { toDoList, setToDoList, task, setTask, setChosenTask } = GlobalState;
+    const { toDoList, setToDoList, setChosenTask, category, setCategory } = GlobalState;
+
+    const [search, setSearch] = useState('');
+    const [filteredToDoList, setFilteredToDoList] = useState(toDoList);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const uniqueCategories = [...new Set(toDoList.map(item => item.category))];
+        setCategories(uniqueCategories);
+    }, [toDoList]);
+
+    useEffect(() => {
+        let filteredList = toDoList;
+
+        if (search !== '') {
+            filteredList = filteredList.filter(item => item.task.toLowerCase().includes(search.toLowerCase()));
+        }
+
+        if (category !== '') {
+            filteredList = filteredList.filter(item => item.category === category);
+        }
+
+        setFilteredToDoList(filteredList);
+    }, [search, category, toDoList]);
 
     const renderItem = ({item}) => {
         return(
@@ -38,14 +62,6 @@ export default function Home({navigation, GlobalState}){
         await Clipboard.setStringAsync(item.task);
       };
 
-    const handleSaveTask = () => {
-        const index = toDoList.length + 1;
-        
-        setToDoList(prevState => [...prevState, {id: index, task: task}])
-        
-        setTask('');
-    }
-
     const handleChooseTask = (item) => {
         setChosenTask(item);
         navigation.navigate('ChosenTask');
@@ -60,20 +76,30 @@ export default function Home({navigation, GlobalState}){
             <Header />
             <View style = {styles.body}>
                 <TextInput
-                    maxLength={23} 
-                    style={styles.input}
-                    onChangeText={setTask}
-                    value={task}
-                    placeholder="To do task..."
+                        style={styles.input}
+                        placeholder="Search task..."
+                        onChangeText={setSearch}
+                        value={search}
                 />
+                <Picker
+                    selectedValue={category}
+                    onValueChange={setCategory}
+                    style={styles.picker}
+                    
+                >
+                    <Picker.Item label="All" value="" />
+                    {categories.map(category => (
+                        <Picker.Item key={category} label={category} value={category} />
+                    ))}
+                </Picker>
                 <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleSaveTask()}
-            >
-                <Text style={styles.buttonText}>Sumbit</Text>
-            </TouchableOpacity>
+                    style={styles.button}
+                    onPress={() => navigation.navigate('AddTask')}
+                >
+                    <Text style={styles.buttonText}>Add Task</Text>
+                </TouchableOpacity>
                 <FlatList
-                    data={toDoList}
+                    data={filteredToDoList}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                 />
