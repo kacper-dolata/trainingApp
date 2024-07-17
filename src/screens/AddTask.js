@@ -1,11 +1,12 @@
-import React,{ useState, useEffect} from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
+import React,{ useContext } from "react";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import { GlobalStateContext } from '../Context/GlobalStateContext';
 
-export default function AddTask({navigation, GlobalState}){
-    const { toDoList, setToDoList, task, setTask, category, setCategory} = GlobalState;
+export default function AddTask({navigation}){
+    const { toDoList, setToDoList, task, setTask, category, setCategory} = useContext(GlobalStateContext);
 
     const handleSaveTask = () => {
         const index = toDoList.length + 1;

@@ -1,4 +1,4 @@
-import React,{ useState, useEffect} from "react";
+import React,{ useState, useEffect, useContext} from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import * as Clipboard from 'expo-clipboard';
@@ -6,21 +6,22 @@ import { Picker } from '@react-native-picker/picker';
 
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import { GlobalStateContext } from '../Context/GlobalStateContext';
 
-export default function Home({navigation, GlobalState}){
-    const { toDoList, setToDoList, setChosenTask, category, setCategory } = GlobalState;
+export default function Home({navigation}){
+    const { toDoList, setToDoList, setChosenTask, category, setCategory } = useContext(GlobalStateContext);
 
     const [search, setSearch] = useState('');
     const [filteredToDoList, setFilteredToDoList] = useState(toDoList);
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        const uniqueCategories = [...new Set(toDoList.map(item => item.category))];
-        setCategories(uniqueCategories);
-    }, [toDoList]);
+        const uniqueCategories = [...new Set(toDoList.map(item => item.category))]; // funkcja tworzy zbiór unikalnych wartości dla klucza category
+        setCategories(uniqueCategories); 
+    }, [toDoList]); //useEffect wykona się tylko gdy wartości w toDoList ulegną zmianie
 
     useEffect(() => {
-        let filteredList = toDoList;
+        let filteredList = toDoList; // kopiowanie toDoList
 
         if (search !== '') {
             filteredList = filteredList.filter(item => item.task.toLowerCase().includes(search.toLowerCase()));
@@ -68,7 +69,7 @@ export default function Home({navigation, GlobalState}){
     }
 
     const handleDeleteTask = (id) => {
-        setToDoList(prevState => prevState.filter(task => task.id !== id));
+        setToDoList(prevState => prevState.filter(task => task.id !== id)); 
       };
 
     return(

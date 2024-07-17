@@ -1,13 +1,12 @@
-import React,{ useState, useEffect} from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
+import React,{ useContext } from "react";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import { GlobalStateContext } from '../Context/GlobalStateContext';
 
-export default function ChosenTask({navigation, GlobalState, handleSaveTask}){
-    const {task, setTask, category, setCategory, chosenTask } = GlobalState;
-
-    const [search, setSearch] = useState('');
+export default function ChosenTask({navigation}){
+    const {task, setTask, category, setCategory, chosenTask } = useContext(GlobalStateContext);
 
     const handleUpdateTask = () => {
         chosenTask.task = task;
